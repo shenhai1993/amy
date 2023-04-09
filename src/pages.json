@@ -1,0 +1,84 @@
+{
+	"easycom": {
+		"^cc-(.*)": "common/components/cc-$1/cc-$1.vue",
+		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+	},
+	"pages": [{
+			"path": "pages/course/index",
+			"style": {
+				"navigationBarTitleText": "课程列表",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/settled/index",
+			"style": {
+				"navigationBarTitleText": "课时结算",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/inspector/index",
+			"style": {
+				"navigationBarTitleText": "巡检列表",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/login",
+			"style": {
+				"navigationBarTitleText": "爱萌芽",
+				"enablePullDownRefresh": false
+			}
+		}, {
+			"path": "pages/registration",
+			"style": {
+				"navigationBarTitleText": "爱萌芽",
+				"enablePullDownRefresh": false
+			}
+		}, {
+			"path": "pages/question/index",
+			"style": {
+				"navigationBarTitleText": "爱萌芽",
+				"enablePullDownRefresh": false
+			}
+		},{
+			"path": "pages/mine/index",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#FFF",
+		"backgroundColor": "#FFF"
+	},
+	"tabBar": {
+		"color": "#999999",
+		"selectedColor": "#FF8D1A",
+		"borderStyle": "black",
+		"backgroundColor": "#fff",
+		"list": [{
+				"pagePath": "pages/course/index",
+				"iconPath": "static/tabBar/food.png",
+				"selectedIconPath": "static/tabBar/food-active.png",
+				"text": "课程列表"
+			},
+			{
+				"pagePath": "pages/settled/index",
+				"iconPath": "static/tabBar/order.png",
+				"selectedIconPath": "static/tabBar/order-active.png",
+				"text": "课时结算"
+			},
+			{
+				"pagePath": "pages/mine/index",
+				"iconPath": "static/tabBar/mine.png",
+				"selectedIconPath": "static/tabBar/mine-active.png",
+				"text": "个人中心"
+			}
+		]
+	}
+
+}
