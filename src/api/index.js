@@ -120,6 +120,18 @@ export function editUsers(data) {
     return  uni.$u.http.post('/users/update', {...data})
 }
 
+/**
+ * @desc 注册
+ * @param {} 
+ */
 export function register(data) {
     return  uni.$u.http.post('/users/register', {...data})
+}
+
+/**
+ * @desc 提交问卷
+ * @param {} 
+ */
+export function postQuestionsRecord(data) {
+    return  uni.$u.http.post('/questions/record', {...data})
 }
