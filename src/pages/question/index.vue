@@ -87,16 +87,19 @@
 			async submit() {
 				try{
 					const params = {data:  JSON.stringify(this.answersForm)}
-					console.log(typeof( JSON.stringify(this.answersForm)))
+					console.log(params)
 					const res = await postQuestionsRecord(params)
-					if (res.code == 0) {
+				}catch(e){
+					if(e===0) {
 						uni.showToast({
 							icon: 'none',
 							title: '提交成功'
 						});
+						setTimeout(()=>{
+							uni.navigateBack({delta: 2})
+						},1000)
 					}
-				}catch(e){
-					debugger
+					console.log(e)
 					//TODO handle the exception
 				}
 			}

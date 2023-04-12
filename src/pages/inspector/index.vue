@@ -3,15 +3,15 @@
 		<u-sticky offset-top="0">
 			<view class="pt-3 flex j-between">
 				<view class="select-collapse">
-					<picker mode = selector  @change="bindPickerChange1"
-					 :value="index" :range="array" range-key="id" 
-					  class="mr-1">班级列表</picker>
+					<picker mode = selector  @change="bindPickerChange1($event, 'grades','grades_id', 'gradesArray')"
+					 :value="index" :range="gradesArray" range-key="name" 
+					  class="mr-1">{{grades}}</picker>
 					<u-icon name="arrow-down" color="#000000" size="26"></u-icon>
 				</view>
 				<view class="select-collapse">
-					<picker mode = selector  @change="bindPickerChange1"
-					 :value="index" :range="array" range-key="id" 
-					  class="mr-1">老师列表</picker>
+					<picker mode = selector  @change="bindPickerChange1($event, 'teachers', 'users_id','teachersArray')"
+					 :value="index" :range="teachersArray" range-key="name" 
+					  class="mr-1">{{teachers}}</picker>
 					<u-icon  name="arrow-down" color="#000000" size="26"></u-icon>
 				</view>
 				<view class="select-collapse">
@@ -27,63 +27,198 @@
 			</view>
 		</u-sticky>
 		<view class="pt-3">
-			<view class="flex a-center font-26 py-2 border-bottom">
-				<view class="">
-					<view class="btn">2020/05/05</view>
+			<block v-for="(item, index) in inspectorList" :key="index">
+				<view class="flex a-center font-26 py-2 border-bottom">
+					<view class="">
+						<view class="btn">{{item.start_time | formatDate}}</view>
+					</view>
+					<view class="flex-1 px-3">
+						<view class="mb-1">{{item.school}}-{{item.grade}}-{{item.user.username}}</view>
+						<view class="font-20 black-2">{{item.subject}} | {{item.start_time | formatDatem}}-{{item.end_time | formatDatem}}</view>
+					</view>
+					<view class="pr-3">
+						<view class="mb-1">课程进度</view>
+						<progress :percent="70" stroke-width="10" activeColor="#0d0d0d" border-radius="5" />
+					</view>
+					<view class="flex a-center" @click="onClickSign(item,index)">
+						<uni-icons type="calendar"  :color="item.comment_score>0?'#d8d8d8':'#000'" size="28"></uni-icons>
+						<view class="black-1 ml-1">考评</view>
+					</view>
 				</view>
-				<view class="flex-1 px-3">
-					<view class="mb-1">A学校-x班级-李老师</view>
-					<view class="font-20 black-2">英语|8:00-10:00|课程信息</view>
+			</block>
+		</view>
+		<view class="mt-3" v-if="inspectorList.length>20">
+			<ljs-pagination
+				:total="total"
+				:pageNum.sync="pageNum"
+				:pageSize="pageSize"
+				@num-change="onChangePageNum">
+			</ljs-pagination>
+		</view>
+		<u-popup :show="popupShow" :closeable="true" :closeOnClickOverlay ="false"
+		 @close="onClosePopup" mode="center">
+			<view class="p-3 popup">
+				<view class="flex a-center font-48 mb-5">
+					<view class="ml-2">考评</view>
 				</view>
-				<view class="pr-3">
-					<view class="mb-1">课程进度</view>
-					<u-line-progress :percent="70" :round="false" active-color="#ff9900"></u-line-progress>
+				<view class="mb-3 flex">
+					<view class="label">课程时间：</view>
+					<view>{{popupData.start_time}}</view>
 				</view>
-				<view class="flex a-center">
-					<u-icon name="calendar" color="#000000" size="45"></u-icon>
-					<view class="black-1 ml-1">考评</view>
+				<view class="mb-3 flex">
+					<view class="label">考评时段：</view>
+					<view></view>
+				</view>
+				<view class="mb-3 flex">
+					<view class="label">评分：</view>
+					<u-rate :count="count" size="48" inactiveColor="#C1D6FF" v-model="comment_score"></u-rate>
+				</view>
+				<view class="mb-3 flex">
+					<view class="label">评语：</view>
+					<input v-model="comment" class="input">
+				</view>
+				<view class="py-3 text-right">
+					<button class="saveBtn" @click="onclickSubmit">确定</button>
 				</view>
 			</view>
-		</view>
+		</u-popup>
 	</view>
 </template>
 
 <script>
 	import dayjs from "dayjs";
-	import { getInspectorGradesList, getTeachersList} from '../../api/index.js'
+	import { getInspectorGradesList, getTeachersList, getInspectorList, postinsPectorComment} from '../../api/index.js'
 	export default {
 			data() {
 				return {
-					index: 1,
+					index: 0,
+					inspectorList: [], // 巡检列表
 					grades_id: '', // 班级id
 					users_id: '', // 教师id
-					start_time: dayjs().subtract(1, 'day').format('YYYY/MM/DD'), // 开始日期
-					end_time: dayjs().format('YYYY-MM-DD') // 结束日期
+					grades: '班级列表', // 选择的班级
+					teachers: '老师列表', // 选择的老师
+					gradesArray: [], // 班级列表
+					teachersArray: [], // 老师列表
+					start_time: dayjs().subtract(30, 'day').format('YYYY-MM-DD'), // 开始日期
+					end_time: dayjs().format('YYYY-MM-DD'),  // 结束日期
+					total: 0, // 数据总数
+					pageNum: 0, // 当前页
+					pageSize: 20, // 分页条数
+					popupShow: false, // 弹窗控制
+					popupData: {}, // 点击的数据对象
+					count: 5,
+					comment_score: 0, // 评分
+					comment: ''  // 点评
 				}
 			},
-		
+			filters: {
+				// 取时间上午下午
+				formatDate(val){
+					return dayjs(val).format('hh:mmA')
+				},
+				// 取时间
+				formatDatem(val){
+					return dayjs(val).format('h:mm')
+				}
+			},
 			created() {
-				this.getGrades()
-				this.getTeachers()
+				this.getInspectorList() // 获取巡检列表
+				this.getGrades() // 获取班级列表
 			},
 			methods: {
+				// 获取巡检列表
+				async getInspectorList() {
+					const params = {
+						grades_id: this.grades_id,
+						users_id: this.users_id,
+						start_time: this.start_time  + ' 00:00:00',
+						end_time: this.end_time + ' 23:59:59',
+						pageNum: this.pageNum
+					}
+					const res = await getInspectorList(params)
+					this.inspectorList = res.data
+					this.total = res.meta.total
+				},
 				// 班级列表
 				async getGrades() {
 					const res = await getInspectorGradesList()
+					this.gradesArray = res.data.map((item)=>{
+						return {id: item.grades_id, name: item.grade.name}
+					})
+					this.getTeachers({grades_id:res.data[0].grades_id})
 				},
 				// 老师列表
-				async getTeachers() {
-					const res = await getTeachersList()
+				async getTeachers(params) {
+					const res = await getTeachersList(params)
+					this.teachersArray = res.data.map((item)=>{
+						return {id: item.users_id, name: item.user.username}
+					})
 				},
+				// 时间选择器
 				bindDateChange(e,r) {
 					this[r] = e.detail.value
+					this.getInspectorList()
 				},
-				bindPickerChange1() {}
+				// 班级和老师选择器 e 当前下标 r 赋值的name key 赋值的id arr从哪个数组取值
+				bindPickerChange1(e,r,key,arr) {
+					this[r] = this[arr][e.detail.value].name // 赋值name
+					this[key] = this[arr][e.detail.value].id // 赋值id
+					this.getInspectorList() // 请求
+				},
+				// 分页
+				onChangePageNum(num){
+					 this.pageNum = num
+					 this.getInspectorList()
+				},
+				// 关闭弹窗
+				onClosePopup() {
+					this.popupShow = false
+					this.comment = ''
+					this.comment_score = 0
+				},
+				onClickSign(item,index) {
+					if(item.comment_score>0) return false
+					this.popupData = item
+					this.index = index
+					this.popupShow = true
+				},
+				// 提交点评
+				async onclickSubmit() {
+					try{
+						uni.showLoading({title: "点评中",mask: true,})
+						console.log(this.comment_score)
+						const params = {
+							classes_id: this.popupData.id,
+							comment_score: this.comment_score,
+							comment: this.comment
+						}
+						const res = await postinsPectorComment(params)
+						if(res.code===0) {
+							uni.showToast({
+							  icon:'success',
+							  title: '点评成功'
+							})
+							this.onClosePopup()
+						} else {
+							uni.showToast({
+							  icon:'error',
+							  title: e.data.message || '点评失败'
+							});
+						}
+					}catch(e){
+						console.log(e)
+						uni.showToast({
+						  icon:'error',
+						  title: e.data.message || '失败'
+						})
+					}
+
+				}
 			}
 		}
 </script>
 
-<style>
+<style lang="scss" scoped>
 	.select-collapse{
 		display: flex;
 		align-items: center;
@@ -94,5 +229,24 @@
 		font-size: 24rpx;
 		padding: 8rpx 0rpx;
 		text-align: center;
+	}
+	.saveBtn{
+		background: #0256FF;
+		color: #fff;
+		font-size: 30rpx;
+		display: inline-block;
+		border-radius: 8rpx;
+		min-width:180rpx
+	}
+	.popup{
+		width: 580rpx;
+		.label{
+			width: 160rpx;
+			text-align: left;
+		}
+		.input {
+			border-bottom: 1px solid #8d8d8d;
+			padding: 5rpx 8rpx;
+		}
 	}
 </style>

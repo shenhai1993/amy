@@ -179,7 +179,7 @@
 		width: 580rpx;
 		.label{
 			width: 160rpx;
-			text-align: right;
+			text-align: left;
 		}
 	}
 </style>

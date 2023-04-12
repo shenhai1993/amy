@@ -135,3 +135,11 @@ export function register(data) {
 export function postQuestionsRecord(data) {
     return  uni.$u.http.post('/questions/record', {...data})
 }
+
+/**
+ * @desc 提交问卷
+ * @param {} 
+ */
+export function postinsPectorComment(data) {
+    return  uni.$u.http.post('/classes/inspector_comment', {...data})
+}

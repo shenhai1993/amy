@@ -132,9 +132,16 @@
 						icon: 'none',
 						title: this.editStatus? '修改成功' : '注册成功'
 					  });
-					  this.editStatus = false
 					 setTimeout(()=>{
-					 		uni.navigateBack()
+						 if( this.editStatus) {
+							 uni.navigateBack()
+							 this.editStatus = false
+						 } else {
+							 uni.navigateTo({
+							 	url: '/pages/question/index'
+							 })
+						 }
+					 		
 					 },1000) 
 					  
 				}
