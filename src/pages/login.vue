@@ -8,13 +8,13 @@
 					<image src='../static/banner.jpg'></image>
 				</view>
 				<view class="py-5"></view>
-				<button class='bottom mb-5' type='primary' open-type="chooseAddress"  @click="getUserProfile"
-					>
-					教师登录
+				<button class='bottom mb-5 flex a-center j-center ' type='primary' open-type="chooseAddress"  @click="getUserProfile">
+					<uni-icons type="person-filled"  color="#fff" size="24"></uni-icons>
+					<span class="ml-2">教师登录</span>
 				</button>
-				<button class='bottom' type='primary'  @click="getUserProfile"
-					>
-					巡堂员登录
+				<button class='bottom flex a-center j-center' type='primary'  @click="getUserProfile">
+					<uni-icons type="auth-filled"  color="#fff" size="24"></uni-icons>
+					<span class="ml-2">巡堂员登录</span>
 				</button>
 				<!-- <button class='bottom'  @click="userInfo">授权登录</button> -->
 			</view>
@@ -201,6 +201,7 @@
 
 	.bottom {
 		width: 100%;
+		height: 90rpx;
 		background: #303030;
 		color: #fff;
 		font-size: 32rpx;

@@ -16,8 +16,16 @@
 				</view>
 			</view>
 		</block>
-		<view v-if="coureList.length===0" class="text-center py-2 font-36 color-orange">
+		<view v-if="coureList.length===0" class="text-center py-2 font-36 black-1">
 			暂无历史课程
+		</view>
+		<view class="mt-3" v-if="coureList.length>20">
+			<ljs-pagination
+				:total="total"
+				:pageNum.sync="pageNum"
+				:pageSize="pageSize"
+				@num-change="onChangePageNum">
+			</ljs-pagination>
 		</view>
 	</view>
 </template>
@@ -30,6 +38,9 @@
 			return {
 				 count: 5,
 				 value: 5,
+				 total: 0,
+				 pageNum: 0, // 当前页
+				 pageSize: 20, // 分页条数
 				 coureList: [],
 			}
 		},
@@ -57,9 +68,10 @@
 						title: "加载中",
 						mask: true,
 					});
-					const res = await getClassesList({type: 2})
+					const res = await getClassesList({type: 2,pageNum: this.pageNum})
 					if(res.code===0) {
 						this.coureList = res.data
+						this.total = res.meta.total
 					}
 					uni.hideLoading()
 				}catch(e){
@@ -71,6 +83,10 @@
 				}
 				
 			},
+			onChangePageNum(num){
+				 this.pageNum = num
+				 this.getList()
+			}
 		}
 	}		
 </script>

@@ -38,7 +38,7 @@
 					</view>
 					<view class="pr-3">
 						<view class="mb-1">课程进度</view>
-						<progress :percent="70" stroke-width="10" activeColor="#0d0d0d" border-radius="5" />
+						<progress :percent="item.start_time | progressData(item.end_time)" stroke-width="10" activeColor="#0d0d0d" border-radius="5" />
 					</view>
 					<view class="flex a-center" @click="onClickSign(item,index)">
 						<uni-icons type="calendar"  :color="item.comment_score>0?'#d8d8d8':'#000'" size="28"></uni-icons>
@@ -67,7 +67,7 @@
 				</view>
 				<view class="mb-3 flex">
 					<view class="label">考评时段：</view>
-					<view></view>
+					<view>{{popupData.start_time | classedStatus(popupData.end_time)}}</view>
 				</view>
 				<view class="mb-3 flex">
 					<view class="label">评分：</view>
@@ -113,12 +113,43 @@
 			},
 			filters: {
 				// 取时间上午下午
-				formatDate(val){
+				formatDate(val) {
 					return dayjs(val).format('hh:mmA')
 				},
 				// 取时间
-				formatDatem(val){
+				formatDatem(val) {
 					return dayjs(val).format('h:mm')
+				},
+				progressData(t1,t2) {
+					let progress = 0 // 进度条
+					const d = dayjs().unix() // 当前时间戳
+					const s = dayjs(t1).unix() // 课程开始时间戳
+					const e = dayjs(t2).unix() // 课程结束时间戳
+					if(d>e) {
+						progress = 100
+					}
+					if (s<d && d<e) {
+						const f = d-s 
+						const m = e-s
+						progress = (f/m).toFixed(2) * 100
+					}
+					return progress
+				},
+				classedStatus(t1,t2){
+					let text = '' // 
+					const d = dayjs().unix() // 当前时间戳
+					const s = dayjs(t1).unix() // 课程开始时间戳
+					const e = dayjs(t2).unix() // 课程结束时间戳
+					if(d>e) {
+						text = '课时后'
+					}
+					if (s<d && d<e) {
+						text = '课时中'
+					}
+					if (d<s) {
+						text = '课程还未开始'
+					}
+					return text
 				}
 			},
 			created() {
@@ -185,6 +216,9 @@
 				// 提交点评
 				async onclickSubmit() {
 					try{
+						const d = dayjs().unix() // 当前时间戳
+						const s = dayjs( this.popupData.start_time).unix() // 课程开始时间戳
+						if(d<s) return uni.showToast({  icon:'none', title: '课程还未开始，不能点评'})
 						uni.showLoading({title: "点评中",mask: true,})
 						console.log(this.comment_score)
 						const params = {
