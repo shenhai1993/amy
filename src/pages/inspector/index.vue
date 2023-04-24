@@ -157,7 +157,7 @@
 					return text
 				}
 			},
-     mounted() {
+			onShow() {
 				this.getInspectorList() // 获取巡检列表
 				this.getGrades() // 获取班级列表
 			},

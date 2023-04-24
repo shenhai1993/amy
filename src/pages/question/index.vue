@@ -54,7 +54,7 @@
 				answersForm: {} // 答案表
 			};
 		},
-		created() {
+		onShow() {
 			this.getQuestionsList()
 		},
 		methods: {
