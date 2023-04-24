@@ -8,11 +8,11 @@
 					<image src='../static/banner.jpg'></image>
 				</view>
 				<view class="py-5"></view>
-				<button class='bottom mb-5 flex a-center j-center ' type='primary' open-type="chooseAddress"  @click="getUserProfile">
+				<button class='bottom mb-5 flex a-center j-center ' type='primary' open-type="chooseAddress"  @click="getUserProfile(1)">
 					<uni-icons type="person-filled"  color="#fff" size="24"></uni-icons>
 					<span class="ml-2">教师登录</span>
 				</button>
-				<button class='bottom flex a-center j-center' type='primary'  @click="getUserProfile">
+				<button class='bottom flex a-center j-center' type='primary'  @click="getUserProfile(2)">
 					<uni-icons type="auth-filled"  color="#fff" size="24"></uni-icons>
 					<span class="ml-2">巡堂员登录</span>
 				</button>
@@ -68,7 +68,8 @@
 		},
 		methods: {
 			//第一授权获取用户信息===》按钮触发
-			getUserProfile() {
+			getUserProfile(type) {
+				getApp().globalData.type = type
 				this.show = true
 				let that = this;
 				wx.getUserProfile({

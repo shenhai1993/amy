@@ -10,7 +10,6 @@
 
 <script>
 import store from "../../store";
-
 const actions = {
   add: () => {
     store.dispatch("loading/addAction");

@@ -4,8 +4,10 @@ export default {globalData: {
     user: undefined,
     user_account: undefined,
     userSubsidyAccount: undefined,
+	  type: 1,
   },
   onLaunch: function () {
+	 uni.hideTabBar()
     console.log("App Launch");
     store
         .dispatch("auth/meAction")

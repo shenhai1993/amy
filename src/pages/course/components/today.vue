@@ -95,8 +95,8 @@
 					return progress
 				}
 			},
-			created() {
-				this.getList()
+			mounted() {
+				// this.getList()
 			},
 			methods:{
 				async getList() {

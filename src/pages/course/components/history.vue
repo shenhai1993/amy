@@ -58,8 +58,8 @@
 				return dayjs(val).format('h:mm')
 			}
 		},
-		created() {
-			this.getList()
+		mounted() {
+			// this.getList()
 		},
 		methods: {
 			async getList() {

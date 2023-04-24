@@ -1,7 +1,7 @@
 import store from "../../store";
 import wxConfig from "../../../config/wxIndex.js";
-const baseUrl = wxConfig.baseUrl;
-const timeOut = wxConfig.timeOut
+const baseUrl = wxConfig.baseUrl || 'https://amy.lccc1991.cn/api/api';
+const timeOut = wxConfig.timeOut || 10000
 const actions = {
   add: () => {
     store.dispatch("loading/addAction");
@@ -79,6 +79,11 @@ uni.$u.http.interceptors.response.use(
 	}
   },
   (response) => {
+	if(response.data.code===10000){
+		uni.navigateTo({
+			url: '/pages/login'
+		})
+	}
     actions.sub();
     return Promise.reject(response);
   }

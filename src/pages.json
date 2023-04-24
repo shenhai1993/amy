@@ -18,6 +18,13 @@
 			}
 		},
 		{
+			"path": "pages/grades/index",
+			"style": {
+				"navigationBarTitleText": "班级管理",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
 			"path": "pages/inspector/index",
 			"style": {
 				"navigationBarTitleText": "巡检列表",
@@ -61,22 +68,34 @@
 		"borderStyle": "black",
 		"backgroundColor": "#fff",
 		"list": [{
-				"pagePath": "pages/course/index",
-				"iconPath": "static/tabBar/food.png",
-				"selectedIconPath": "static/tabBar/food-active.png",
-				"text": "课程列表"
+				"pagePath": "pages/course/index"
+				// "iconPath": "static/tabBar/food.png",
+				// "selectedIconPath": "static/tabBar/food-active.png",
+				// "text": "课程列表"
 			},
 			{
-				"pagePath": "pages/settled/index",
-				"iconPath": "static/tabBar/order.png",
-				"selectedIconPath": "static/tabBar/order-active.png",
-				"text": "课时结算"
+				"pagePath": "pages/inspector/index"
+				// "iconPath": "static/tabBar/food.png",
+				// "selectedIconPath": "static/tabBar/food-active.png",
+				// "text": "巡检列表"
 			},
 			{
-				"pagePath": "pages/mine/index",
-				"iconPath": "static/tabBar/mine.png",
-				"selectedIconPath": "static/tabBar/mine-active.png",
-				"text": "个人中心"
+				"pagePath": "pages/settled/index"
+				// "iconPath": "static/tabBar/order.png",
+				// "selectedIconPath": "static/tabBar/order-active.png",
+				// "text": "课时结算"
+			},
+			{
+				"pagePath": "pages/grades/index"
+				// "iconPath": "static/tabBar/order.png",
+				// "selectedIconPath": "static/tabBar/order-active.png",
+				// "text": "班级管理"
+			},
+			{
+				"pagePath": "pages/mine/index"
+				// "iconPath": "static/tabBar/mine.png",
+				// "selectedIconPath": "static/tabBar/mine-active.png",
+				// "text": "个人中心"
 			}
 		]
 	}

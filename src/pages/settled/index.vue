@@ -69,10 +69,12 @@
 				</view>
 			</view>
 		</u-popup>
+		<navTab value="1"></navTab>
 	</view>
 </template>
 
 <script>
+	import navTab from '../../common/components/tabBar-nav/index'
 	import { getSettledList, postClassesSettled } from '../../api/index.js'
 	import dayjs from "dayjs"
 	export default {
@@ -83,6 +85,9 @@
 				popupData: {},
 				index: 0
 			}
+		},
+		components: {
+			navTab
 		},
 		filters: {
 			// 取年月日
@@ -99,7 +104,7 @@
 			}
 		},
 		
-		mounted() {
+		onShow() {
 			this.getSettledClassList()
 		},
 		methods: {

@@ -82,10 +82,12 @@
 				</view>
 			</view>
 		</u-popup>
+		<navTab></navTab>
 	</view>
 </template>
 
 <script>
+	import navTab from '../../common/components/tabBar-nav/index'
 	import dayjs from "dayjs";
 	import { getInspectorGradesList, getTeachersList, getInspectorList, postinsPectorComment} from '../../api/index.js'
 	export default {
@@ -110,6 +112,9 @@
 					comment_score: 0, // 评分
 					comment: ''  // 点评
 				}
+			},
+			components: {
+				navTab
 			},
 			filters: {
 				// 取时间上午下午
@@ -152,7 +157,7 @@
 					return text
 				}
 			},
-			created() {
+     mounted() {
 				this.getInspectorList() // 获取巡检列表
 				this.getGrades() // 获取班级列表
 			},

@@ -58,11 +58,13 @@
 		<view class="p-5 text-center">
 			<button class="logout " @click="onClickLogout()">退出登录</button>
 		</view>
+		<navTab value="2"></navTab>
 	</view>
 </template>
 
 <script>
 	// import store from "../../store";
+	import navTab from '../../common/components/tabBar-nav/index'
 	import {getBaseUser,getAuthMe, getBaseSchool, logout} from '../../api/index.js'
 	const actions = {}
 	export default {
@@ -78,10 +80,13 @@
 				]
 			};
 		},
+		components: {
+			navTab
+		},
 		onLoad() {
 			// this.userData = store.state.auth.user
 		},
-		mounted() {
+		onShow() {
 			this.getAuthMe()
 		},
 		methods: {
@@ -136,7 +141,7 @@
 
 		.logout {
 			position: fixed;
-			bottom: 100rpx;
+			bottom: 200rpx;
 			left: 50rpx;
 			width: 650rpx;
 			height: 88rpx;

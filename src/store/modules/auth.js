@@ -31,7 +31,8 @@ const actions = {
       .then((res) => {
         console.log(res, "测试");
         if (res.code == 0) {
-          commit("setLogin", res.data);
+           commit("setLogin", res.data);
+		   getApp().globalData.type = res.data.user.type || 1
           if (!res.data.employee) {
            /* uni.setStorageSync("WEBURL", window.location.href);
             setTimeout(() => {
