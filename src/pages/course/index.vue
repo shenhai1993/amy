@@ -35,7 +35,6 @@
 			onShow() {
 				 this.$refs.today.getList() 
 				 this.$refs.history.getList() 
-				 this.$refs.navTab.onSeletType()
 				// this.getList()
 			},
 			methods: {

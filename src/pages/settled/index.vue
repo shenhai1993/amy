@@ -147,9 +147,9 @@
 					const res = await postClassesSettled({classId: this.popupData.id})
 					uni.showToast({
 					  icon:'success',
-					  title: '签到成功'
+					  title: '结算成功'
 					});
-					this.coureList[this.index].settle_status = this.popupData.settle_status + 1
+					this.settledList[this.index].settle_status = this.popupData.settle_status + 1
 					this.popupShow = false
 				}catch(e){
 					if(e===1) {
@@ -157,6 +157,7 @@
 						  icon:'success',
 						  title: '结算成功'
 						})
+						this.settledList[this.index].settle_status = this.popupData.settle_status + 1
 						this.popupShow = false
 					} else {
 						uni.showToast({

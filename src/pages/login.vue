@@ -107,6 +107,7 @@
 				uni.showLoading({
 					title: '请求中'
 				})
+				const type = getApp().globalData.type
 				return new Promise((resolve, reject) => {
 					wx.login({
 						success: async res => {
@@ -115,7 +116,8 @@
 								code: code,
 								phone: this.phone,
 								username: this.nickName,
-								avatar: this.avatarUrl
+								avatar: this.avatarUrl,
+								type,
 				
 							}
 							const loginRes = await loginAuth(params)
@@ -125,9 +127,16 @@
 							  title: '登录成功，跳转中。。。'
 							});
 							setTimeout(()=>{
-								uni.switchTab({
-									url: '/pages/course/index'
-								})
+								if(type===1) {
+									uni.switchTab({
+										url: '/pages/course/index'
+									})
+								} else{
+									uni.switchTab({
+										url: '/pages/inspector/index'
+									})
+								}
+								
 							},300)
 							
 							// const { status:loginStatus, data } = loginRes

@@ -55,6 +55,9 @@
 				@num-change="onChangePageNum">
 			</ljs-pagination>
 		</view>
+		<view v-if="inspectorList.length===0" class="text-center py-2 font-36 black-1">
+			暂无巡检数据
+		</view>
 		<u-popup :show="popupShow" :closeable="true" :closeOnClickOverlay ="false"
 		 @close="onClosePopup" mode="center">
 			<view class="p-3 popup">
