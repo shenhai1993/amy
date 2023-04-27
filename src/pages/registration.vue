@@ -13,17 +13,17 @@
 			<u--form labelPosition="left" :model="model1" :rules="rules" ref="uForm">
 				<u-form-item label="注册类型:" labelWidth='160rpx'  borderBottom
 					@click="showSex = true; hideKeyboard()">
-					<u--input v-model="model1.userInfo.typeName" placeholder="请选择注册类型" border="none"></u--input>
+					<u-input v-model="model1.userInfo.typeName" custom-style="background-color:#fff"  :type="type" disabled placeholder="请选择注册类型" border="none"></u-input>
 					<u-icon slot="right" name="arrow-right"></u-icon>
 				</u-form-item>
 				<u-form-item label="姓名:" labelWidth='160rpx' prop="userInfo.username" borderBottom >
-					<u--input v-model="model1.userInfo.username" border="none"></u--input>
+					<u-input v-model="model1.userInfo.username" border="none"></u-input>
 				</u-form-item>
 				<u-form-item label="手机号:" labelWidth='160rpx' prop="userInfo.phone" borderBottom >
-					<u--input v-model="model1.userInfo.phone" border="none"></u--input>
+					<u-input v-model="model1.userInfo.phone" border="none"></u-input>
 				</u-form-item>
 				<u-form-item label="密码:" labelWidth='160rpx' prop="userInfo.password" borderBottom>
-					<u--input v-model="model1.userInfo.password" type="password" border="none"></u--input>
+					<u-input v-model="model1.userInfo.password" type="password" border="none"></u-input>
 				</u-form-item>
 			</u--form>
 			<u-action-sheet :show="showSex" :actions="actions" title="请选择注册类型" @close="showSex = false"
@@ -41,6 +41,7 @@
 	export default {
 		data() {
 			return {
+				type: 'select',
 				showSex: false,
 				model1: {
 					userInfo: {
@@ -134,12 +135,12 @@
 					  });
 					 setTimeout(()=>{
 						 if( this.editStatus) {
-							 uni.navigateBack()
-							 this.editStatus = false
-						 } else {
 							 uni.navigateTo({
 							 	url: '/pages/question/index'
 							 })
+							 this.editStatus = false
+						 } else {
+							 
 						 }
 					 		
 					 },1000) 

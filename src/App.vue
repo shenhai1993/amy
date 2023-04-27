@@ -9,27 +9,27 @@ export default {globalData: {
   onLaunch: function () {
 	 uni.hideTabBar()
     console.log("App Launch");
-    store
-        .dispatch("auth/meAction")
-        .then((res) => {
-          // store.dispatch("loading/onAppLaunchedAction");
-        })
-        .catch((err) => {
-          let routes = getCurrentPages(); // 获取当前打开过的页面路由数组
-          let curRoute = routes[routes.length - 1].route
-          if (curRoute==='pages/login') return false
-          uni.showModal({
-            title: "未登录",
-            content: "跳转到微信进行登录？",
-            showCancel: false,
-            confirmText: "点击前往",
-            success: function () {
-              uni.reLaunch({
-                url: "/pages/login",
-              });
-            },
-          });
-        });
+    // store
+    //     .dispatch("auth/meAction")
+    //     .then((res) => {
+    //       // store.dispatch("loading/onAppLaunchedAction");
+    //     })
+    //     .catch((err) => {
+    //       let routes = getCurrentPages(); // 获取当前打开过的页面路由数组
+    //       let curRoute = routes[routes.length - 1].route
+    //       if (curRoute==='pages/login') return false
+    //       uni.showModal({
+    //         title: "未登录",
+    //         content: "跳转到微信进行登录？",
+    //         showCancel: false,
+    //         confirmText: "点击前往",
+    //         success: function () {
+    //           uni.reLaunch({
+    //             url: "/pages/login",
+    //           });
+    //         },
+    //       });
+    //     });
   },
   onShow: function () {
     console.log("App Show");

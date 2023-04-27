@@ -39,7 +39,7 @@
 					<view class="ml-2">打卡</view>
 				</view>
 				<view class="mb-3">
-					打卡时间： {{popupData.sign_out_time || sign_time}} 
+					打卡时间： {{popupData.start_time || sign_time}} 
 				</view>
 				<view class="mb-3">
 					打卡类型：{{popupData.sign_status===0?'签到':'签退'}}

@@ -33,14 +33,14 @@
 					<view class="label">打卡时间：</view>
 					<view class="">
 						<view class="mb-1">
-							<span class="mr-1">签到√</span> 
+							<span class="mr-1">签到{{sign_status>0?'√':'x'}}</span> 
 							<block>
 								<span v-if="popupData.sign_time">{{popupData.sign_time | formatDateUnix}}</span>
 								<span v-else></span>
 							</block>
 						</view>
 						<view>
-							<span class="mr-1">签退x</span>
+							<span class="mr-1">签退{{sign_status>1?'√':'x'}}</span>
 							<block>
 								<span v-if="popupData.sign_out_time">{{popupData.sign_out_time | formatDateUnix}}</span>
 								<span v-else></span>
