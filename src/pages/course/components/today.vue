@@ -36,24 +36,36 @@
 			<view class="p-3 popup">
 				<view class="flex a-center font-48 mb-5">
 					<u-icon name="info-circle" color="#000" size="60"></u-icon>
-					<view class="ml-2">打卡</view>
+					<view class="ml-2">{{signLogList.length===0?'打卡':'打卡记录'}}</view>
 				</view>
-				<view class="mb-3">
-					打卡时间： {{popupData.start_time || sign_time}} 
-				</view>
-				<view class="mb-3">
-					打卡类型：{{popupData.sign_status===0?'签到':'签退'}}
-				</view>
-				<view class="py-3 text-right">
-					<button class="saveBtn" @click="onClickSignTime">确定</button>
-				</view>
+				<block v-if="signLogList.length===0">
+					<view class="mb-3">
+						打卡时间： {{sign_time}} 
+					</view>
+					<view class="mb-3">
+						打卡类型：{{popupData.sign_status===0?'签到':'签退'}}
+					</view>
+					<view class="py-3 text-right">
+						<button class="saveBtn" @click="onClickSignTime">确定</button>
+					</view>
+				</block>
+				<block v-else>
+					<view>
+						<block v-for="(item, index) in signLogList" :key="index">
+							<view class="mb-3">{{item.sign_type===1?'签到':'签退'}}：{{item.created_at}}</view>
+						</block>
+						<view class="py-3 text-right">
+							<button class="saveBtn" @click="onClosePopup">确定</button>
+						</view>
+					</view>
+				</block>
 			</view>
 		</u-popup>
 	</view>
 </template>
 
 <script>
-	import {getClassesList, onSign} from '../../../api/index.js'
+	import { getClassesList, onSign, getSignLogs } from '../../../api/index.js'
 	import dayjs from "dayjs";
 	export default {
 			props:{
@@ -67,7 +79,8 @@
 					popupShow: false,
 					popupData: {},
 					index: 0,
-					sign_time:  dayjs().format('YYYY-MM-DD HH:mm:ss')
+					sign_time:  dayjs().format('YYYY-MM-DD HH:mm:ss'),
+					signLogList: []
 				}
 			},
 			filters: {
@@ -123,10 +136,11 @@
 					
 				},
 				onClosePopup() {
+					this.signLogList = []
 					this.popupShow = false
 				},
 				onClickSign(item,index) {
-					if(item.sign_status===2) return false
+					//if(item.sign_status===2) return false
 					this.popupData = item
 					this.index = index
 					this.popupShow = true
@@ -142,15 +156,16 @@
 						  icon:'success',
 						  title: '签到成功'
 						});
-						this.coureList[this.index].sign_status = this.popupData.sign_status + 1
-						this.popupShow = false
+						// this.coureList[this.index].sign_status = this.popupData.sign_status + 1
+						// this.popupShow = false
 					}catch(e){
 						if(e===1) {
 							uni.showToast({
 							  icon:'success',
 							  title: '签到成功'
 							})
-							this.popupShow = false
+							this.getSignLogsList(this.popupData.id) // 获取打卡记录
+							// this.popupShow = false
 						} else {
 							uni.showToast({
 							  icon:'error',
@@ -161,6 +176,11 @@
 						//TODO handle the exception
 					}
 					
+				},
+				async getSignLogsList(id) {
+					const res = await getSignLogs({classId: id})
+					const {code,data} = res
+					this.signLogList = data
 				},
 				onChangePageNum(num){
 					 this.pageNum = num

@@ -19,6 +19,9 @@
 				</view>
 			</view>
 		</block>
+		<view v-if="settledList.length===0" class="text-center py-2 font-36 black-1">
+			暂无课时结算
+		</view>
 		<u-popup :show="popupShow" :closeable="true" :closeOnClickOverlay ="false"
 		 @close="onClosePopup" mode="center">
 			<view class="p-3 popup">
@@ -27,7 +30,7 @@
 				</view>
 				<view class="mb-3 flex">
 					<view class="label">课程时间： </view>
-					<view>{{popupData.start_time | formatDatey}}</view>
+					<view>{{popupData.start_time | formatDatey}}  {{popupData.start_time | formatDatem}}-{{popupData.end_time | formatDatem}}</view>
 				</view>
 				<view class="mb-3 flex">
 					<view class="label">打卡时间：</view>
@@ -35,14 +38,14 @@
 						<view class="mb-1">
 							<span class="mr-1">签到{{sign_status>0?'√':'x'}}</span> 
 							<block>
-								<span v-if="popupData.sign_time">{{popupData.sign_time | formatDateUnix}}</span>
+								<span v-if="popupData.sign_time">{{popupData.sign_time }}</span>
 								<span v-else></span>
 							</block>
 						</view>
 						<view>
 							<span class="mr-1">签退{{sign_status>1?'√':'x'}}</span>
 							<block>
-								<span v-if="popupData.sign_out_time">{{popupData.sign_out_time | formatDateUnix}}</span>
+								<span v-if="popupData.sign_out_time">{{popupData.sign_out_time}}</span>
 								<span v-else></span>
 							</block>
 						</view>
@@ -58,7 +61,7 @@
 				</view>
 				<view class="mb-3 flex">
 					<view  class="label">结算时间：</view>
-					<view>{{popupData.settled_time}} </view>
+					<view>{{settled_time}} </view>
 				</view>
 				<view class="mb-3 flex">
 					<view  class="label">结算金额：</view>
@@ -83,6 +86,7 @@
 				settledList: [],
 				popupShow: false,
 				popupData: {},
+				settled_time:  dayjs().format('YYYY-MM-DD HH:mm:ss'),
 				index: 0
 			}
 		},

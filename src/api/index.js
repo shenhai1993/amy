@@ -143,3 +143,11 @@ export function postQuestionsRecord(data) {
 export function postinsPectorComment(data) {
     return  uni.$u.http.post('/classes/inspector_comment', {...data})
 }
+
+/**
+ * @desc 获取签到列表
+ * @param {Number} classld 课程id
+ */
+export function getSignLogs(data) {
+    return  uni.$u.http.post('/classes/get_sign_logs', {...data})
+}

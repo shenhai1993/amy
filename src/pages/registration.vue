@@ -1,7 +1,7 @@
 <template>
 	<view class="bg-white content">
 		<view class="page-wrap">
-			<view class="p-3"></view>
+			<view class="p-2"></view>
 			<view class="py-2 p1-2 ">
 				<view class="flex a-center">
 					<view>
@@ -13,26 +13,58 @@
 			<u--form labelPosition="left" :model="model1" :rules="rules" ref="uForm">
 				<u-form-item label="注册类型:" labelWidth='160rpx'  borderBottom
 					@click="showSex = true; hideKeyboard()">
-					<u-input v-model="model1.userInfo.typeName" custom-style="background-color:#fff"  :type="type" disabled placeholder="请选择注册类型" border="none"></u-input>
+					<u--input v-model="model1.userInfo.typeName" custom-style="background-color:#fff"  :type="type" disabled placeholder="请选择注册类型" border="none"></u--input>
 					<u-icon slot="right" name="arrow-right"></u-icon>
 				</u-form-item>
 				<u-form-item label="姓名:" labelWidth='160rpx' prop="userInfo.username" borderBottom >
-					<u-input v-model="model1.userInfo.username" border="none"></u-input>
+					<u--input v-model="model1.userInfo.username" border="none"></u--input>
 				</u-form-item>
 				<u-form-item label="手机号:" labelWidth='160rpx' prop="userInfo.phone" borderBottom >
-					<u-input v-model="model1.userInfo.phone" border="none"></u-input>
+					<u--input v-model="model1.userInfo.phone" border="none"></u--input>
 				</u-form-item>
 				<u-form-item label="密码:" labelWidth='160rpx' prop="userInfo.password" borderBottom>
-					<u-input v-model="model1.userInfo.password" type="password" border="none"></u-input>
+					<u--input v-model="model1.userInfo.password" type="password" border="none"></u--input>
+				</u-form-item>
+				<u-form-item label="身份证:" labelWidth='160rpx' prop="userInfo.id_card" borderBottom>
+					<u--input v-model="model1.userInfo.id_card" type="idcard"  border="none"></u--input>
+				</u-form-item>
+				<u-form-item label="地址:" labelWidth='160rpx' prop="userInfo.address" borderBottom>
+					<u--input v-model="model1.userInfo.address"  border="none"></u--input>
+				</u-form-item>
+				<u-form-item label="紧急联系人:" labelWidth='160rpx' prop="userInfo.exigency_contact" borderBottom>
+					<u--input v-model="model1.userInfo.exigency_contact"  border="none"></u--input>
+				</u-form-item>
+				<u-form-item label="个人描述:" labelWidth='160rpx' borderBottom>
+					<u--input v-model="model1.userInfo.desc"  border="none" placeholder="请输入个人描述" ></u--input>
+				</u-form-item>
+				<u-form-item label="学历:" labelWidth='160rpx' borderBottom>
+					<u--input v-model="model1.userInfo.education"  border="none"></u--input>
+				</u-form-item>
+				<u-form-item label="来源:" labelWidth='160rpx' borderBottom>
+					<u--input v-model="model1.userInfo.source"  border="none"></u--input>
+				</u-form-item>
+				<u-form-item label="曾任职:" labelWidth='160rpx' borderBottom>
+					<u--input v-model="model1.userInfo.previous_job"  border="none"></u--input>
+				</u-form-item>
+				<u-form-item label="资质:" labelWidth='160rpx' borderBottom>
+					<u--input v-model="model1.userInfo.certification"  border="none"></u--input>
+				</u-form-item>
+				<u-form-item label="获奖:" labelWidth='160rpx' borderBottom>
+					<u--input v-model="model1.userInfo.prize" border="none"></u--input>
+				</u-form-item>
+				<u-form-item label="头像地址:" labelWidth='160rpx' borderBottom>
+					<u--input v-model="model1.userInfo.avatar"  border="none"></u--input>
 				</u-form-item>
 			</u--form>
 			<u-action-sheet :show="showSex" :actions="actions" title="请选择注册类型" @close="showSex = false"
 				@select="sexSelect">
 			</u-action-sheet>
 		</view>
-		<button class='bottom' @click="submit">
-			{{editStatus?'提交修改' : '提交注册'}}
-		</button>
+		<view class="py-3">
+			<button class='bottom' @click="submit">
+				{{editStatus?'提交修改' : '提交注册'}}
+			</button>
+		</view>
 	</view>
 </template>
 
@@ -49,7 +81,18 @@
 						username: '',
 						type: '',
 						phone: '',
-						password: ''
+						password: '',
+						desc: '', // 个人描述
+						id_card: '', // 身份证
+						education: '', // 学历
+						source: '', // 来源
+						previous_job: '', // 曾任职
+						certification: '', // 资质
+						address: '', // 地址
+						exigency_contact: '', // 紧急联系人
+						prize: '' , // 获奖
+						avatar: '', // 头像地址
+						code: '' , // 小程序登录code
 					},
 				},
 				editStatus: false,
@@ -81,6 +124,24 @@
 						message: '请填写密码',
 						trigger: ['blur', 'change']
 					},
+					'userInfo.id_card': {
+						type: 'string',
+						required: true,
+						message: '请填写身份证',
+						trigger: ['blur', 'change']
+					},
+					'userInfo.address': {
+						type: 'string',
+						required: true,
+						message: '请填写地址',
+						trigger: ['blur', 'change']
+					},
+					'userInfo.exigency_contact': {
+						type: 'string',
+						required: true,
+						message: '请填写紧急联系人',
+						trigger: ['change']
+					},
 					'userInfo.typeName': {
 						type: 'string',
 						max: 1,
@@ -94,6 +155,7 @@
 			};
 		},
 		onLoad(options) {
+			this.getCode()
 			if (options.type) {
 				this.editStatus = true
 				this.getUser()
@@ -107,7 +169,7 @@
 				});
 				const res = await getBaseUser()
 				if(res.code ===0) {
-					const {type,username,phone,password,id} =  res.data
+					const {type,username,phone,password,id,desc,id_card,education,source,previous_job,certification,address,exigency_contact,prize,avatar} =  res.data
 					const name =  type===1?'教师' : '巡检员'
 					this.$set(this.model1.userInfo, 'id', id)
 					this.$set(this.model1.userInfo, 'type', type)
@@ -115,6 +177,18 @@
 					this.$set(this.model1.userInfo, 'username', username)
 					this.$set(this.model1.userInfo, 'phone', phone)
 					this.$set(this.model1.userInfo, 'password', password)
+					
+					this.$set(this.model1.userInfo, 'desc', desc)
+					this.$set(this.model1.userInfo, 'id_card', id_card)
+					this.$set(this.model1.userInfo, 'education', education)
+					this.$set(this.model1.userInfo, 'source', source)
+					this.$set(this.model1.userInfo, 'previous_job', previous_job)
+					this.$set(this.model1.userInfo, 'certification', certification)
+					this.$set(this.model1.userInfo, 'address', address)
+					
+					this.$set(this.model1.userInfo, 'exigency_contact', exigency_contact)
+					this.$set(this.model1.userInfo, 'prize', prize)
+					this.$set(this.model1.userInfo, 'avatar', avatar)
 				}
 				uni.hideLoading()
 			},
@@ -126,6 +200,7 @@
 			hideKeyboard(){
 			},
 			async submit() {
+				let wxReq = await wx.login({})
 				// delete this.model1.userInfo.typeName
 				const res = this.editStatus ? await editUsers( this.model1.userInfo) : await register( this.model1.userInfo)
 				if(res.code == 0){
@@ -133,24 +208,31 @@
 						icon: 'none',
 						title: this.editStatus? '修改成功' : '注册成功'
 					  });
+					   this.editStatus = false
 					 setTimeout(()=>{
-						 if( this.editStatus) {
-							 uni.navigateTo({
-							 	url: '/pages/question/index'
-							 })
-							 this.editStatus = false
-						 } else {
-							 
-						 }
-					 		
+					 	uni.navigateBack()	
 					 },1000) 
 					  
 				}
+			},
+			getCode() {
+				wx.login({
+					success: async res => {
+						const { code } = res
+						this.$set(this.model1.userInfo, 'code', code)
+					},
+					fail: () => {
+						reject(false)
+					}
+				})
 			}
 		},
 		onReady() {
+			setTimeout(()=>{
+				this.$refs.uForm.setRules(this.rules)
+			},1000)
 			//如果需要兼容微信小程序，并且校验规则中含有方法等，只能通过setRules方法设置规则。
-			this.$refs.uForm.setRules(this.rules)
+			
 		},
 	};
 </script>
@@ -165,10 +247,8 @@
 		height: 80rpx;
 	}
 	.bottom {
-		position: absolute;
-		left: 30rpx;
-		bottom: 20%;
 		width: 690rpx;
+		margin: 30rpx auto;
 		background: #303030;
 		color: #fff;
 		font-size: 32rpx;

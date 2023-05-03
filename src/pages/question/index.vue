@@ -90,15 +90,15 @@
 					console.log(params)
 					const res = await postQuestionsRecord(params)
 				}catch(e){
-					if(e===0) {
-						uni.showToast({
-							icon: 'none',
-							title: '提交成功'
-						});
-						setTimeout(()=>{
-							uni.navigateBack({delta: 2})
-						},1000)
-					}
+					uni.showToast({
+						icon: 'none',
+						title: '提交成功'
+					});
+					setTimeout(()=>{
+						uni.switchTab({
+							url: '/pages/coures/index'
+						})
+					},1000)
 					console.log(e)
 					//TODO handle the exception
 				}

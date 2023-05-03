@@ -112,9 +112,8 @@
 				return new Promise((resolve, reject) => {
 					wx.login({
 						success: async res => {
-							const { code } = res
 							const  params = {
-								code: code,
+								code: res.code,
 								phone: this.phone,
 								username: this.nickName,
 								avatar: this.avatarUrl,
@@ -122,17 +121,23 @@
 				
 							}
 							const loginRes = await loginAuth(params)
-							uni.setStorage({key:'userInfo',data: loginRes.data})
+							const {code, data} = loginRes
+							uni.setStorage({key:'userInfo', data: loginRes.data})
+							if (code!==0) return uni.showToast({icon:'none', title: '登录失败'});
 							uni.showToast({
 							  icon:'none',
 							  title: '登录成功，跳转中。。。'
 							});
 							setTimeout(()=>{
-								if(type===1) {
+								if(type===1 && data.hasExam) {
 									uni.switchTab({
 										url: '/pages/course/index'
 									})
-								} else{
+								} else if (type===1 && !data.hasExam){
+									uni.reLaunch({
+										url: '/pages/question/index'
+									})
+								} else {
 									uni.switchTab({
 										url: '/pages/inspector/index'
 									})
