@@ -11,48 +11,48 @@
 				</view>
 			</view>
 			<u--form labelPosition="left" :model="model1" :rules="rules" ref="uForm">
-				<u-form-item label="注册类型:" labelWidth='160rpx'  borderBottom
+				<u-form-item label="注册类型:" labelWidth='180rpx'  borderBottom
 					@click="showSex = true; hideKeyboard()">
 					<u--input v-model="model1.userInfo.typeName" custom-style="background-color:#fff"  :type="type" disabled placeholder="请选择注册类型" border="none"></u--input>
 					<u-icon slot="right" name="arrow-right"></u-icon>
 				</u-form-item>
-				<u-form-item label="姓名:" labelWidth='160rpx' prop="userInfo.username" borderBottom >
+				<u-form-item label="姓名:" labelWidth='180rpx' prop="userInfo.username" borderBottom >
 					<u--input v-model="model1.userInfo.username" border="none"></u--input>
 				</u-form-item>
-				<u-form-item label="手机号:" labelWidth='160rpx' prop="userInfo.phone" borderBottom >
+				<u-form-item label="手机号:" labelWidth='180rpx' prop="userInfo.phone" borderBottom >
 					<u--input v-model="model1.userInfo.phone" border="none"></u--input>
 				</u-form-item>
-				<u-form-item label="密码:" labelWidth='160rpx' prop="userInfo.password" borderBottom>
+				<u-form-item label="密码:" labelWidth='180rpx' prop="userInfo.password" borderBottom>
 					<u--input v-model="model1.userInfo.password" type="password" border="none"></u--input>
 				</u-form-item>
-				<u-form-item label="身份证:" labelWidth='160rpx' prop="userInfo.id_card" borderBottom>
+				<u-form-item label="身份证:" labelWidth='180rpx' prop="userInfo.id_card" borderBottom>
 					<u--input v-model="model1.userInfo.id_card" type="idcard"  border="none"></u--input>
 				</u-form-item>
-				<u-form-item label="地址:" labelWidth='160rpx' prop="userInfo.address" borderBottom>
+				<u-form-item label="地址:" labelWidth='180rpx' prop="userInfo.address" borderBottom>
 					<u--input v-model="model1.userInfo.address"  border="none"></u--input>
 				</u-form-item>
-				<u-form-item label="紧急联系人:" labelWidth='160rpx' prop="userInfo.exigency_contact" borderBottom>
+				<u-form-item label="紧急联系人:" labelWidth='180rpx' prop="userInfo.exigency_contact" borderBottom>
 					<u--input v-model="model1.userInfo.exigency_contact"  border="none"></u--input>
 				</u-form-item>
-				<u-form-item label="个人描述:" labelWidth='160rpx' borderBottom>
+				<u-form-item label="个人描述:" labelWidth='180rpx' borderBottom>
 					<u--input v-model="model1.userInfo.desc"  border="none" placeholder="请输入个人描述" ></u--input>
 				</u-form-item>
-				<u-form-item label="学历:" labelWidth='160rpx' borderBottom>
+				<u-form-item label="学历:" labelWidth='180rpx' borderBottom>
 					<u--input v-model="model1.userInfo.education"  border="none"></u--input>
 				</u-form-item>
-				<u-form-item label="来源:" labelWidth='160rpx' borderBottom>
+				<u-form-item label="来源:" labelWidth='180rpx' borderBottom>
 					<u--input v-model="model1.userInfo.source"  border="none"></u--input>
 				</u-form-item>
-				<u-form-item label="曾任职:" labelWidth='160rpx' borderBottom>
+				<u-form-item label="曾任职:" labelWidth='180rpx' borderBottom>
 					<u--input v-model="model1.userInfo.previous_job"  border="none"></u--input>
 				</u-form-item>
-				<u-form-item label="资质:" labelWidth='160rpx' borderBottom>
+				<u-form-item label="资质:" labelWidth='180rpx' borderBottom>
 					<u--input v-model="model1.userInfo.certification"  border="none"></u--input>
 				</u-form-item>
-				<u-form-item label="获奖:" labelWidth='160rpx' borderBottom>
+				<u-form-item label="获奖:" labelWidth='180rpx' borderBottom>
 					<u--input v-model="model1.userInfo.prize" border="none"></u--input>
 				</u-form-item>
-				<u-form-item label="头像地址:" labelWidth='160rpx' borderBottom>
+				<u-form-item label="头像地址:" labelWidth='180rpx' borderBottom>
 					<u--input v-model="model1.userInfo.avatar"  border="none"></u--input>
 				</u-form-item>
 			</u--form>
@@ -202,17 +202,27 @@
 			async submit() {
 				let wxReq = await wx.login({})
 				// delete this.model1.userInfo.typeName
-				const res = this.editStatus ? await editUsers( this.model1.userInfo) : await register( this.model1.userInfo)
-				if(res.code == 0){
-					  uni.showToast({
+				try{
+					const res = this.editStatus ? await editUsers( this.model1.userInfo) : await register( this.model1.userInfo)
+					if(res.code === 0){
+						  uni.showToast({
+							icon: 'none',
+							title: this.editStatus? '修改成功' : '注册成功'
+						  });
+						   this.editStatus = false
+						 setTimeout(()=>{
+						 	uni.navigateBack()	
+						 },1000) 
+						  
+					}
+				}catch(e){
+					uni.showToast({
 						icon: 'none',
-						title: this.editStatus? '修改成功' : '注册成功'
-					  });
-					   this.editStatus = false
-					 setTimeout(()=>{
-					 	uni.navigateBack()	
-					 },1000) 
-					  
+						title: e.data.message || '注册失败'
+					});
+					setTimeout(()=>{
+						uni.navigateBack()	
+					},1000) 
 				}
 			},
 			getCode() {
@@ -228,9 +238,7 @@
 			}
 		},
 		onReady() {
-			setTimeout(()=>{
-				this.$refs.uForm.setRules(this.rules)
-			},1000)
+			this.$refs.uForm.setRules(this.rules)
 			//如果需要兼容微信小程序，并且校验规则中含有方法等，只能通过setRules方法设置规则。
 			
 		},
