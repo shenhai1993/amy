@@ -17,43 +17,50 @@
 					<u-icon slot="right" name="arrow-right"></u-icon>
 				</u-form-item>
 				<u-form-item label="姓名:" labelWidth='180rpx' prop="userInfo.username" borderBottom >
-					<u--input v-model="model1.userInfo.username" border="none"></u--input>
+					<u--input v-model="model1.userInfo.username" border="none" placeholder="请填写姓名"></u--input>
 				</u-form-item>
 				<u-form-item label="手机号:" labelWidth='180rpx' prop="userInfo.phone" borderBottom >
-					<u--input v-model="model1.userInfo.phone" border="none"></u--input>
+					<u--input v-model="model1.userInfo.phone" border="none" placeholder="请填写手机号"></u--input>
 				</u-form-item>
 				<u-form-item label="密码:" labelWidth='180rpx' prop="userInfo.password" borderBottom>
-					<u--input v-model="model1.userInfo.password" type="password" border="none"></u--input>
+					<u--input v-model="model1.userInfo.password" type="password" border="none" placeholder="请填写密码"></u--input>
 				</u-form-item>
 				<u-form-item label="身份证:" labelWidth='180rpx' prop="userInfo.id_card" borderBottom>
-					<u--input v-model="model1.userInfo.id_card" type="idcard"  border="none"></u--input>
+					<u--input v-model="model1.userInfo.id_card" type="idcard"  border="none" placeholder="请填写身份证"></u--input>
 				</u-form-item>
 				<u-form-item label="地址:" labelWidth='180rpx' prop="userInfo.address" borderBottom>
-					<u--input v-model="model1.userInfo.address"  border="none"></u--input>
+					<u--input v-model="model1.userInfo.address" placeholder="请填写地址"  border="none"></u--input>
 				</u-form-item>
 				<u-form-item label="紧急联系人:" labelWidth='180rpx' prop="userInfo.exigency_contact" borderBottom>
-					<u--input v-model="model1.userInfo.exigency_contact"  border="none"></u--input>
+					<u--input v-model="model1.userInfo.exigency_contact" placeholder="请填写紧急联系人"  border="none"></u--input>
 				</u-form-item>
 				<u-form-item label="个人描述:" labelWidth='180rpx' borderBottom>
 					<u--input v-model="model1.userInfo.desc"  border="none" placeholder="请输入个人描述" ></u--input>
 				</u-form-item>
 				<u-form-item label="学历:" labelWidth='180rpx' borderBottom>
-					<u--input v-model="model1.userInfo.education"  border="none"></u--input>
+					<u--input v-model="model1.userInfo.education" placeholder="学历"  border="none"></u--input>
 				</u-form-item>
 				<u-form-item label="来源:" labelWidth='180rpx' borderBottom>
-					<u--input v-model="model1.userInfo.source"  border="none"></u--input>
+					<u--input v-model="model1.userInfo.source" placeholder="来源" border="none"></u--input>
 				</u-form-item>
 				<u-form-item label="曾任职:" labelWidth='180rpx' borderBottom>
-					<u--input v-model="model1.userInfo.previous_job"  border="none"></u--input>
+					<u--input v-model="model1.userInfo.previous_job" placeholder="曾任职" border="none"></u--input>
 				</u-form-item>
 				<u-form-item label="资质:" labelWidth='180rpx' borderBottom>
-					<u--input v-model="model1.userInfo.certification"  border="none"></u--input>
+					<u--input v-model="model1.userInfo.certification" placeholder="资质" border="none"></u--input>
 				</u-form-item>
 				<u-form-item label="获奖:" labelWidth='180rpx' borderBottom>
-					<u--input v-model="model1.userInfo.prize" border="none"></u--input>
+					<u--input v-model="model1.userInfo.prize" placeholder="获奖" border="none"></u--input>
 				</u-form-item>
 				<u-form-item label="头像地址:" labelWidth='180rpx' borderBottom>
-					<u--input v-model="model1.userInfo.avatar"  border="none"></u--input>
+					<!-- <u--input v-model="model1.userInfo.avatar"  ttouxaing="none"></u--input> -->
+					<u-upload
+							:fileList="fileList"
+							@afterRead="afterRead"
+							@delete="deletePic"
+							name="1"
+							:maxCount="1"
+						></u-upload>
 				</u-form-item>
 			</u--form>
 			<u-action-sheet :show="showSex" :actions="actions" title="请选择注册类型" @close="showSex = false"
@@ -69,7 +76,7 @@
 </template>
 
 <script>
-	import { getBaseUser, register, editUsers } from '../api/index.js'
+	import { getBaseUser, register, editUsers, upload } from '../api/index.js'
 	export default {
 		data() {
 			return {
@@ -93,8 +100,10 @@
 						prize: '' , // 获奖
 						avatar: '', // 头像地址
 						code: '' , // 小程序登录code
+						img: '' 
 					},
 				},
+				fileList: [],
 				editStatus: false,
 				actions: [{
 						type: 1,
@@ -188,7 +197,8 @@
 					
 					this.$set(this.model1.userInfo, 'exigency_contact', exigency_contact)
 					this.$set(this.model1.userInfo, 'prize', prize)
-					this.$set(this.model1.userInfo, 'avatar', avatar)
+					// this.$set(this.model1.userInfo, 'avatar', avatar)
+					this.fileList = [{name: '',url: avatar}]
 				}
 				uni.hideLoading()
 			},
@@ -224,6 +234,50 @@
 						uni.navigateBack()	
 					},1000) 
 				}
+			},
+			// 删除图片
+			deletePic(event) {
+				this.fileList = []
+			},
+			// 新增图片
+			async afterRead(event) {
+				if (event.file.size> 51200) return uni.showToast({title:'头像不能超过50k',duration:1500,icon:'none'})
+				// 当设置 multiple 为 true 时, file 为数组格式，否则为对象格式
+				// let lists = [].concat(event.file)
+				// let fileListLen = this[`fileList${event.name}`].length
+				this.fileList = [{name: '',url: event.file.url}]
+				uni.getImageInfo({
+					src: event.file.url,
+					success: (image)=> {
+						// 做png/jpeg的类型判断————对不同类型的图像添加不同的转换头信息
+						if(image.type=='png'||image.type=='jpeg'){
+							// 对符合类型的图片转换为base64类型
+							uni.getFileSystemManager().readFile({// 【重点来啦】人家自提供的转码API
+								filePath:image.path,// 所需转码图像路径
+								encoding:"base64",// 转码类型
+								success: async(req)=>{
+									// 生成base64
+									let imageBase64='data:image/'+image.type+';base64,'+req.data;
+									console.log('转base64后：',imageBase64);
+									this.model1.userInfo.img = imageBase64
+									// if(this.model1.userInfo.id) {
+									// 	const params  = {
+									// 		avatar: imageBase64,
+									// 		id: 4
+									// 	}
+									// 	const res = await upload(params)
+									// }
+								}
+							})
+						}else{// 友好一点，不是以上类型做出提醒
+							uni.showToast({
+								title:'当前只支持png/jpeg格式',
+								duration:2500,
+								icon:'none'
+							})
+						}
+					}
+				})
 			},
 			getCode() {
 				wx.login({

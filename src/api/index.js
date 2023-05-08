@@ -151,3 +151,12 @@ export function postinsPectorComment(data) {
 export function getSignLogs(data) {
     return  uni.$u.http.post('/classes/get_sign_logs', {...data})
 }
+
+/**
+ * @desc upload_img
+ * @param {Number} id 课程id
+ * @param {String} avatar 课程id
+ */
+export function upload(data) {
+    return  uni.$u.http.post('/users/upload_img', {...data})
+}
