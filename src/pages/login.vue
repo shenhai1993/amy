@@ -24,9 +24,17 @@
 				<view class="borderBox p-2 font-28 info-box">
 				    <view class="flex j-start a-center my-2">
 				        <image class="logo mr-2" src="../static/logo.png" mode="aspectFit"></image>
-				        <text>{{ appName }}</text>
+				        <text>爱萌芽</text>
 				    </view>
-				    <view class="flex j-start a-center my-2 pl-1">绑定手机号码</view>
+				    <view class="flex j-start a-center my-3 pl-1 font-30 font-bold">绑定手机号码</view>
+					<view class="flex j-start a-center my-2">
+						<u-checkbox-group >
+							<u-checkbox v-model="agreement" checked="true"  @change="checkboxChange"
+							 shape="circle" size="20px" iconSize="16px" labelSize="16px"></u-checkbox>
+							<text class="v-align">同意</text>
+							<text class="v-align blue" @click="agreementHare">《用户协议和隐私协议》</text>
+						</u-checkbox-group>
+					</view>
 				    <view class="flex j-start a-center py-2 van-hairline--top van-hairline--bottom">
 				        <view class="avtar mr-2">
 				            <open-data type="userAvatarUrl"></open-data>
@@ -42,10 +50,12 @@
 				            <view>允许</view>
 				        </label>-->
 				        <view >
-							<button  class="btn-item confirm flex a-center j-center" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">允许</button>
+							<button v-if="!agreement"  class="btn-item confirm flex a-center j-center" @click="onChecked">允许</button>
+							<button v-else class="btn-item confirm flex a-center j-center" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">允许</button>
+							<!-- <button  class="btn-item confirm flex a-center j-center" id="phone" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">允许</button> -->
 				        </view>
-				
 				    </view>
+					<view class="py-3"></view>
 				</view>
 		</view>
 		<!-- #ifdef -->
@@ -64,6 +74,7 @@
 				phone: '',
 				nickName: null,
 				avatarUrl: null,
+				agreement: true,
 				isloading: uni.getStorageSync('isloading') || true //默认为true
 			};
 		},
@@ -120,30 +131,36 @@
 								type,
 				
 							}
-							const loginRes = await loginAuth(params)
-							const {code, data} = loginRes
-							uni.setStorage({key:'userInfo', data: loginRes.data})
-							if (code!==0) return uni.showToast({icon:'none', title: '登录失败'});
-							uni.showToast({
-							  icon:'none',
-							  title: '登录成功，跳转中。。。'
-							});
-							setTimeout(()=>{
-								if(type===1 && data.hasExam) {
-									uni.switchTab({
-										url: '/pages/course/index'
-									})
-								} else if (type===1 && !data.hasExam){
-									uni.reLaunch({
-										url: '/pages/question/index'
-									})
-								} else {
-									uni.switchTab({
-										url: '/pages/inspector/index'
-									})
-								}
-								
-							},300)
+							try{
+								const loginRes = await loginAuth(params)
+								const {code, data} = loginRes
+								uni.setStorage({key:'userInfo', data: loginRes.data})
+								if (code!==0) return uni.showToast({icon:'none', title: '登录失败'});
+								uni.showToast({
+								  icon:'none',
+								  title: '登录成功，跳转中。。。'
+								});
+								setTimeout(()=>{
+									if(type===1 && data.hasExam) {
+										uni.switchTab({
+											url: '/pages/course/index'
+										})
+									} else if (type===1 && !data.hasExam){
+										uni.reLaunch({
+											url: '/pages/question/index'
+										})
+									} else {
+										uni.switchTab({
+											url: '/pages/inspector/index'
+										})
+									}
+									
+								},300)
+							}catch(e){
+								 uni.showToast({icon:'none', title: e.data.message || '登录失败'});
+								//TODO handle the exception
+							}
+
 							
 							// const { status:loginStatus, data } = loginRes
 							// if(loginStatus) {
@@ -166,6 +183,27 @@
 				this.show = false
 			    // this.colsePopup()
 			    // app.goBack()
+			},
+			checkboxChange(e) {
+				this.agreement = e
+			},
+			onChecked() {
+				if(!this.agreement) return uni.showToast({icon:'none',title: '请确认并勾选服务协议'});
+			},
+			agreementHare () {
+			    wx.downloadFile({
+			        // 示例 url，并非真实存在
+			        url: 'https://amy.lccc1991.cn/yhxy-mbpdf.pdf',
+			        success: function (res) {
+			            const filePath = res.tempFilePath
+			            wx.openDocument({
+			                filePath: filePath,
+			                success: function (res) {
+			                    console.log('打开文档成功')
+			                }
+			            })
+			        }
+			    })
 			},
 			onClickReg() {
 				uni.navigateTo({
@@ -257,14 +295,14 @@
 	    height: 98rpx;
 	}
 	.btn-item {
-	    width: 180rpx;
-	    height: 60rpx;
+	    width: 220rpx;
+	    height: 80rpx;
 	    min-width: 90px;
 	    min-height: 30px;
 	    box-sizing: border-box;
 	    text-align: center;
-	    font-size: 24rpx;
-	    border-radius: 5rpx;
+	    font-size: 30rpx;
+	    border-radius: 10rpx;
 	}
 	.btn .cancle {
 	    background: rgb(242,242,242);
@@ -283,5 +321,8 @@
 		width: 100vw;
 		bottom: 0rpx;
 		left: 0rpx
+	}
+	.blue{
+		color: blue
 	}
 </style>

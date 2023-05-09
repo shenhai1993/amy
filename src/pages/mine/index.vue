@@ -5,8 +5,8 @@
 				<view class="">
 					<view class="font-32 mb-1 black-1">{{authInfo.user.username}}</view>
 					<view class="font-24 black-3">
-						<block v-if="authInfo.school">{{authInfo.school.name}}-{{authInfo.user.type===1?'教师':'巡堂员'}}</block>
-						<block v-else>暂未绑定学校</block>
+						<block v-if="authInfo.school.name">{{authInfo.school.name}}-{{authInfo.user.type===1?'教师':'巡堂员'}}</block>
+						<block v-else>{{authInfo.user.type===1?'教师':'巡堂员'}}</block>
 					</view>
 				</view>
 				<view class="mr-3">
