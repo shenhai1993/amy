@@ -11,48 +11,50 @@
 				</view>
 			</view>
 			<u--form labelPosition="left" :model="model1" :rules="rules" ref="uForm">
-				<u-form-item label="注册类型:" labelWidth='180rpx'  borderBottom
+				<u-form-item label="注册类型:" labelWidth='200rpx'  borderBottom required="true"
 					@click="showSex = true; hideKeyboard()">
-					<u--input v-model="model1.userInfo.typeName" custom-style="background-color:#fff"  :type="type" disabled placeholder="请选择注册类型" border="none"></u--input>
+					<u--input v-model="model1.userInfo.typeName" disabledColor="#fff"  :type="type" disabled placeholder="请选择注册类型" border="none"></u--input>
 					<u-icon slot="right" name="arrow-right"></u-icon>
 				</u-form-item>
-				<u-form-item label="姓名:" labelWidth='180rpx' prop="userInfo.username" borderBottom >
+				<u-form-item label="姓名:" labelWidth='200rpx' prop="userInfo.username" borderBottom required="true">
 					<u--input v-model="model1.userInfo.username" border="none" placeholder="请填写姓名"></u--input>
 				</u-form-item>
-				<u-form-item label="手机号:" labelWidth='180rpx' prop="userInfo.phone" borderBottom >
+				<u-form-item label="手机号:" labelWidth='200rpx' prop="userInfo.phone" borderBottom required="true">
 					<u--input v-model="model1.userInfo.phone" border="none" placeholder="请填写手机号"></u--input>
 				</u-form-item>
-				<u-form-item label="密码:" labelWidth='180rpx' prop="userInfo.password" borderBottom>
+				<u-form-item label="密码:" labelWidth='200rpx' prop="userInfo.password" borderBottom required="true">
 					<u--input v-model="model1.userInfo.password" type="password" border="none" placeholder="请填写密码"></u--input>
 				</u-form-item>
-				<u-form-item label="身份证:" labelWidth='180rpx' prop="userInfo.id_card" borderBottom>
+				<u-form-item label="身份证:" labelWidth='200rpx' prop="userInfo.id_card" borderBottom required="true">
 					<u--input v-model="model1.userInfo.id_card" type="idcard"  border="none" placeholder="请填写身份证"></u--input>
 				</u-form-item>
-				<u-form-item label="地址:" labelWidth='180rpx' prop="userInfo.address" borderBottom>
+				<u-form-item label="地址:" labelWidth='200rpx' prop="userInfo.address" borderBottom required="true">
 					<u--input v-model="model1.userInfo.address" placeholder="请填写地址"  border="none"></u--input>
 				</u-form-item>
-				<u-form-item label="紧急联系人:" labelWidth='180rpx' prop="userInfo.exigency_contact" borderBottom>
+				<u-form-item label="紧急联系人:" labelWidth='200rpx' prop="userInfo.exigency_contact" borderBottom required="true">
 					<u--input v-model="model1.userInfo.exigency_contact" placeholder="请填写紧急联系人"  border="none"></u--input>
 				</u-form-item>
-				<u-form-item label="个人描述:" labelWidth='180rpx' borderBottom>
+				<u-form-item label="个人描述:" labelWidth='200rpx' borderBottom>
 					<u--input v-model="model1.userInfo.desc"  border="none" placeholder="请输入个人描述" ></u--input>
 				</u-form-item>
-				<u-form-item label="学历:" labelWidth='180rpx' borderBottom>
-					<u--input v-model="model1.userInfo.education" placeholder="学历"  border="none"></u--input>
+				<u-form-item label="学历:" labelWidth='200rpx' borderBottom>
+					<view @click="onClickEducationShow()">
+						<u--input v-model="model1.userInfo.education" disabledColor="#fff" disabled  placeholder="学历"  border="none"></u--input>
+					</view>
 				</u-form-item>
-				<u-form-item label="来源:" labelWidth='180rpx' borderBottom>
+				<u-form-item label="来源:" labelWidth='200rpx' borderBottom>
 					<u--input v-model="model1.userInfo.source" placeholder="来源" border="none"></u--input>
 				</u-form-item>
-				<u-form-item label="曾任职:" labelWidth='180rpx' borderBottom>
+				<u-form-item label="曾任职:" labelWidth='200rpx' borderBottom>
 					<u--input v-model="model1.userInfo.previous_job" placeholder="曾任职" border="none"></u--input>
 				</u-form-item>
-				<u-form-item label="资质:" labelWidth='180rpx' borderBottom>
+				<u-form-item label="资质:" labelWidth='200rpx' borderBottom>
 					<u--input v-model="model1.userInfo.certification" placeholder="资质" border="none"></u--input>
 				</u-form-item>
-				<u-form-item label="获奖:" labelWidth='180rpx' borderBottom>
+				<u-form-item label="获奖:" labelWidth='200rpx' borderBottom>
 					<u--input v-model="model1.userInfo.prize" placeholder="获奖" border="none"></u--input>
 				</u-form-item>
-				<u-form-item label="头像地址:" labelWidth='180rpx' borderBottom>
+				<u-form-item label="头像地址:" labelWidth='200rpx' borderBottom>
 					<!-- <u--input v-model="model1.userInfo.avatar"  ttouxaing="none"></u--input> -->
 					<u-upload
 							:fileList="fileList"
@@ -72,6 +74,7 @@
 				{{editStatus?'提交修改' : '提交注册'}}
 			</button>
 		</view>
+		 <u-picker @cancel="cancel"  :show="educationShow" ref="uPicker" @confirm="confirm" :columns="columns" @change="changeHandler"></u-picker>
 	</view>
 </template>
 
@@ -103,6 +106,8 @@
 						img: '' 
 					},
 				},
+				educationShow: false,
+				columns: [ ['高中', '大专', '本科', '硕士', '博士', '其他'] ],
 				fileList: [],
 				editStatus: false,
 				actions: [{
@@ -117,38 +122,46 @@
 				rules: {
 					'userInfo.username': {
 						type: 'string',
+						min: 1,
+						max: 6,
 						required: true,
-						message: '请填写姓名',
+						message: '姓名不能为空',
 						trigger: ['blur', 'change']
 					},
 					'userInfo.phone': {
-						type: 'string',
+						type: 'number',
 						required: true,
-						message: '请填写手机号',
+						min: 11,
+						max: 11,
+						message: '请填写正确的手机号',
 						trigger: ['blur', 'change']
 					},
 					'userInfo.password': {
 						type: 'string',
+						min: 6,
+						max: 16,
 						required: true,
-						message: '请填写密码',
+						message: '密码格式6-16位',
 						trigger: ['blur', 'change']
 					},
 					'userInfo.id_card': {
 						type: 'string',
 						required: true,
-						message: '请填写身份证',
+						min: 18,
+						max: 18,
+						message: '请填写正确的身份证',
 						trigger: ['blur', 'change']
 					},
 					'userInfo.address': {
 						type: 'string',
 						required: true,
-						message: '请填写地址',
+						message: '地址不能为空',
 						trigger: ['blur', 'change']
 					},
 					'userInfo.exigency_contact': {
 						type: 'string',
 						required: true,
-						message: '请填写紧急联系人',
+						message: '紧急联系人不能为空',
 						trigger: ['change']
 					},
 					'userInfo.typeName': {
@@ -202,38 +215,58 @@
 				}
 				uni.hideLoading()
 			},
+			// 设置职工类型
 			sexSelect(e) {
 				this.model1.userInfo.typeName = e.name
 				this.model1.userInfo.type = e.type
 				this.$refs.uForm.validateField('userInfo.type')
 			},
+			onClickEducationShow() {
+				this.educationShow = true
+			},
+			// 选择学历
+			changeHandler(e) {
+				// this.model1.userInfo.education = e
+				// this.educationShow = false
+			},
+			confirm(e){
+				this.model1.userInfo.education = e.value[0]
+				this.cancel()
+			},
+			cancel() {
+				this.educationShow = false
+			},
 			hideKeyboard(){
 			},
 			async submit() {
-				let wxReq = await wx.login({})
-				// delete this.model1.userInfo.typeName
-				try{
-					const res = this.editStatus ? await editUsers( this.model1.userInfo) : await register( this.model1.userInfo)
-					if(res.code === 0){
-						  uni.showToast({
+				this.$refs.uForm.validate().then(async res => {
+					let wxReq = await wx.login({})
+					delete this.model1.userInfo.typeName
+					try{
+						const res = this.editStatus ? await editUsers( this.model1.userInfo) : await register( this.model1.userInfo)
+						if(res.code === 0){
+							  uni.showToast({
+								icon: 'none',
+								title: this.editStatus? '修改成功' : '注册成功'
+							  });
+							   this.editStatus = false
+							 setTimeout(()=>{
+							 	uni.navigateBack()	
+							 },1000) 
+							  
+						}
+					}catch(e){
+						uni.showToast({
 							icon: 'none',
-							title: this.editStatus? '修改成功' : '注册成功'
-						  });
-						   this.editStatus = false
-						 setTimeout(()=>{
-						 	uni.navigateBack()	
-						 },1000) 
-						  
+							title: e.data.message || '注册失败'
+						});
+						setTimeout(()=>{
+							uni.navigateBack()	
+						},1000) 
 					}
-				}catch(e){
-					uni.showToast({
-						icon: 'none',
-						title: e.data.message || '注册失败'
-					});
-					setTimeout(()=>{
-						uni.navigateBack()	
-					},1000) 
-				}
+				}).catch(errors => {
+					uni.$u.toast('请正确填写信息')
+				})
 			},
 			// 删除图片
 			deletePic(event) {
