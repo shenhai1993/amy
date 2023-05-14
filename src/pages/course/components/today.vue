@@ -127,10 +127,12 @@
 						}
 						uni.hideLoading()
 					}catch(e){
-						uni.showToast({
-						  icon:'error',
-						  title: '获取课程失败'
-						});
+						if(e.data.code===10000) {
+							uni.showToast({
+							  icon:'error',
+							  title: '请先登录'
+							});
+						}
 						//TODO handle the exception
 					}
 					

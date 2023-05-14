@@ -48,7 +48,7 @@ export default {
     };
   },
   mounted() {
-  	this.type = getApp().globalData.type
+	 this.type = uni.getStorageSync('userInfo').user.type || 1
   },
   methods: {
     onchange(e) {

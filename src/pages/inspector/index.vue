@@ -32,16 +32,17 @@
 					<view class="">
 						<view class="btn">{{item.start_time | formatDate}}</view>
 					</view>
-					<view class="flex-1 px-3">
-						<view class="mb-1">{{item.school}}-{{item.grade}}-{{item.user.username}}</view>
-						<view class="font-20 black-2">{{item.subject}} | {{item.start_time | formatDatem}}-{{item.end_time | formatDatem}}</view>
+					<view class="flex-1 px-2">
+						<view class="mb-1">{{item.school_name}}-{{item.subject_name}}-{{item.user.username}}</view>
+						<view class="font-20 black-2">{{item.subject_name}} | {{item.start_time | formatDatem}}-{{item.end_time | formatDatem}}</view>
 					</view>
-					<view class="pr-3">
+					<view class="pr-2">
 						<view class="mb-1">课程进度</view>
 						<progress :percent="item.start_time | progressData(item.end_time)" stroke-width="10" activeColor="#0d0d0d" border-radius="5" />
 					</view>
 					<view class="flex a-center" @click="onClickSign(item,index)">
-						<uni-icons type="calendar"  :color="item.comment_score>0?'#d8d8d8':'#000'" size="28"></uni-icons>
+						<!-- <uni-icons type="calendar"  :color="item.comment_score>0?'#d8d8d8':'#000'" size="28"></uni-icons> -->
+						 <uni-icons type="calendar"  color="#000" size="28"></uni-icons>
 						<view class="black-1 ml-1">考评</view>
 					</view>
 				</view>
@@ -74,11 +75,11 @@
 				</view>
 				<view class="mb-3 flex">
 					<view class="label">评分：</view>
-					<u-rate :count="count" size="48" inactiveColor="#C1D6FF" v-model="comment_score"></u-rate>
+					<u-rate :count="count" size="48" inactiveColor="#C1D6FF" v-model="popupData.comment_score"></u-rate>
 				</view>
 				<view class="mb-3 flex">
 					<view class="label">评语：</view>
-					<input v-model="comment" class="input">
+					<input v-model="popupData.comment" class="input">
 				</view>
 				<view class="py-3 text-right">
 					<button class="saveBtn" @click="onclickSubmit">确定</button>
@@ -110,10 +111,11 @@
 					pageNum: 0, // 当前页
 					pageSize: 20, // 分页条数
 					popupShow: false, // 弹窗控制
-					popupData: {}, // 点击的数据对象
-					count: 5,
-					comment_score: 0, // 评分
-					comment: ''  // 点评
+					popupData: {
+						comment_score: 0, // 评分
+						comment: ''  // 点评
+					}, // 点击的数据对象
+					count: 5
 				}
 			},
 			components: {
@@ -212,11 +214,11 @@
 				// 关闭弹窗
 				onClosePopup() {
 					this.popupShow = false
-					this.comment = ''
-					this.comment_score = 0
+					this.popupData.comment = ''
+					this.popupData.comment_score = 0
 				},
 				onClickSign(item,index) {
-					if(item.comment_score>0) return false
+					// if(item.comment_score>0) return false
 					this.popupData = item
 					this.index = index
 					this.popupShow = true
@@ -228,11 +230,11 @@
 						const s = dayjs( this.popupData.start_time).unix() // 课程开始时间戳
 						if(d<s) return uni.showToast({  icon:'none', title: '课程还未开始，不能点评'})
 						uni.showLoading({title: "点评中",mask: true,})
-						console.log(this.comment_score)
+						console.log(this.popupData.comment_score)
 						const params = {
 							classes_id: this.popupData.id,
-							comment_score: this.comment_score,
-							comment: this.comment
+							comment_score: this.popupData.comment_score,
+							comment: this.popupData.comment
 						}
 						const res = await postinsPectorComment(params)
 						if(res.code===0) {

@@ -34,7 +34,7 @@
 						<view class="font-24 ">班级数量</view>
 					</view>
 					<view class="statistics flex-1">
-						<view class="font-32 font-bold">{{authInfo.inspectionInfo.teacherInfo}}</view>
+						<view class="font-32 font-bold">{{authInfo.inspectionInfo.teacherNums}}</view>
 						<view class="font-24">教师数量</view>
 					</view>
 					<view class="statistics flex-1 bg-">

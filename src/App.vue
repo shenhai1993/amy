@@ -8,6 +8,12 @@ export default {globalData: {
   },
   onLaunch: function () {
 	 uni.hideTabBar()
+	this.type = uni.getStorageSync('userInfo').user.type || 1
+	if(this.type===2) {
+		uni.switchTab({
+		    url: "/pages/inspector/index",
+		});
+	}
     console.log("App Launch");
     // store
     //     .dispatch("auth/meAction")
