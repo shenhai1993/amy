@@ -29,9 +29,9 @@
 				    <view class="flex j-start a-center my-3 pl-1 font-30 font-bold">绑定手机号码</view>
 					<view class="flex j-start a-center my-2">
 						<u-checkbox-group >
-							<u-checkbox v-model="agreement" checked="true"  @change="checkboxChange"
+							<u-checkbox v-model="agreement"   @change="checkboxChange" label="同意"
 							 shape="circle" size="20px" iconSize="16px" labelSize="16px"></u-checkbox>
-							<text class="v-align">同意</text>
+							<!-- <text class="v-align"></text> -->
 							<text class="v-align blue" @click="agreementHare">《用户协议和隐私协议》</text>
 						</u-checkbox-group>
 					</view>
@@ -74,7 +74,7 @@
 				phone: '',
 				nickName: null,
 				avatarUrl: null,
-				agreement: true,
+				agreement: false,
 				isloading: uni.getStorageSync('isloading') || true //默认为true
 			};
 		},
