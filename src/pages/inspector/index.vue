@@ -4,13 +4,13 @@
 			<view class="pt-3 flex j-between">
 				<view class="select-collapse">
 					<picker mode = selector  @change="bindPickerChange1($event, 'grades','grades_id', 'gradesArray')"
-					 :value="index" :range="gradesArray" range-key="name" 
+					 :value="index" :range="gradesArray" @cancel="bindCancel('grades_id')" range-key="name" 
 					  class="mr-1">{{grades}}</picker>
 					<u-icon name="arrow-down" color="#000000" size="26"></u-icon>
 				</view>
 				<view class="select-collapse">
 					<picker mode = selector  @change="bindPickerChange1($event, 'teachers', 'users_id','teachersArray')"
-					 :value="index" :range="teachersArray" range-key="name" 
+					 :value="index" :range="teachersArray" @cancel="bindCancel('users_id')" range-key="name" 
 					  class="mr-1">{{teachers}}</picker>
 					<u-icon  name="arrow-down" color="#000000" size="26"></u-icon>
 				</view>
@@ -86,7 +86,7 @@
 				</view>
 			</view>
 		</u-popup>
-		<navTab></navTab>
+		<navTab :type="types"></navTab>
 	</view>
 </template>
 
@@ -97,6 +97,7 @@
 	export default {
 			data() {
 				return {
+					types: 2,
 					index: 0,
 					inspectorList: [], // 巡检列表
 					grades_id: '', // 班级id
@@ -186,7 +187,8 @@
 					this.gradesArray = res.data.map((item)=>{
 						return {id: item.grades_id, name: item.grade.name}
 					})
-					this.getTeachers({grades_id:res.data[0].grades_id})
+					// this.getTeachers({grades_id:res.data[0].grades_id})
+					this.getTeachers({})
 				},
 				// 老师列表
 				async getTeachers(params) {
@@ -205,6 +207,15 @@
 					this[r] = this[arr][e.detail.value].name // 赋值name
 					this[key] = this[arr][e.detail.value].id // 赋值id
 					this.getInspectorList() // 请求
+				},
+				bindCancel(e) {
+					this[e] = ''
+					if(e==='grades_id') {
+						this.grades = '班级列表'
+					} else {
+						this.teachers = '老师列表'
+					}
+					this.getInspectorList()
 				},
 				// 分页
 				onChangePageNum(num){

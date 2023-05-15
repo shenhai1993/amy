@@ -10,9 +10,14 @@ export default {globalData: {
 	 uni.hideTabBar()
 	this.type = uni.getStorageSync('userInfo').user.type || 1
 	if(this.type===2) {
-		uni.switchTab({
-		    url: "/pages/inspector/index",
-		});
+		setTimeout(() => {
+		      uni.switchTab({
+		          url: '/pages/inspector/index'
+		      })
+		  }, 0)
+		// uni.switchTab({
+		//     url: "/pages/inspector/index",
+		// });
 	}
     console.log("App Launch");
     // store
