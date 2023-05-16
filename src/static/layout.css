@@ -696,3 +696,6 @@ uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked::before {
 	transform: translate(-70%, -50%) scale(1);
 	-webkit-transform: translate(-70%, -50%) scale(1);
 }
+.u-popup .uicon-close{
+	font-size: 22px !important;
+}

@@ -240,6 +240,7 @@
 						const d = dayjs().unix() // 当前时间戳
 						const s = dayjs( this.popupData.start_time).unix() // 课程开始时间戳
 						if(d<s) return uni.showToast({  icon:'none', title: '课程还未开始，不能点评'})
+						if(!this.popupData.comment) return uni.showToast({  icon:'none', title: '请填写评语'})
 						uni.showLoading({title: "点评中",mask: true,})
 						console.log(this.popupData.comment_score)
 						const params = {

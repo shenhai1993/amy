@@ -14,7 +14,7 @@ export default {globalData: {
 		      uni.switchTab({
 		          url: '/pages/inspector/index'
 		      })
-		  }, 0)
+		  }, 80)
 		// uni.switchTab({
 		//     url: "/pages/inspector/index",
 		// });
